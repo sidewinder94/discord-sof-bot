@@ -15,7 +15,7 @@ module Commands
       private
       def cantWaitForStatic(container)
         container.command :wwcntw8 do |event|
-          open('http://data.zarrouk.eu/sof-discord-resources/images/gifs/cantwait.gif', 'rb') do |read_file|
+          open('https://data.zarrouk.eu/sof-discord-resources/images/gifs/cantwait.gif', 'rb') do |read_file|
             Dir.mktmpdir {|dir|
               filePath = "#{dir}/#{File.basename(read_file.base_uri.path)}"
               File.open(filePath, 'wb') do |save_file|
@@ -31,13 +31,14 @@ module Commands
           end
         end
       end
+
       def manifestTest(container)
         container.command :manifest do |event|
-          unless(event.message.author.id == 168053850664599553)
+          unless event.message.author.id == 168053850664599553
             return
           end
 
-          open('http://data.zarrouk.eu/lol-animation-changer/manifest.json', 'rb') do |read_file|
+          open('https://data.zarrouk.eu/lol-animation-changer/manifest.json', 'rb') do |read_file|
             Dir.mktmpdir {|dir|
               filePath = "#{dir}/#{File.basename(read_file.base_uri.path)}"
               File.open(filePath, 'wb') do |save_file|
