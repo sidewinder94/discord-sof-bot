@@ -9,6 +9,7 @@ module Commands
           raise 'Expected a type possessing commands'
         end
         cantWaitForStatic(container)
+        manifestTest(container)
       end
 
       private
@@ -26,6 +27,28 @@ module Commands
               end
               File.delete(filePath)
              return
+            }
+          end
+        end
+      end
+      def manifestTest(container)
+        container.command :manifest do |event|
+          unless(event.message.author.id == 168053850664599553)
+            return
+          end
+
+          open('http://data.zarrouk.eu/lol-animation-changer/manifest.json', 'rb') do |read_file|
+            Dir.mktmpdir {|dir|
+              filePath = "#{dir}/#{File.basename(read_file.base_uri.path)}"
+              File.open(filePath, 'wb') do |save_file|
+                save_file.write(read_file.read)
+              end
+
+              File.open(filePath, 'rb') do |f|
+                event.send_file(f, caption:'Here it comes !')
+              end
+              File.delete(filePath)
+              return
             }
           end
         end
