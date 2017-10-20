@@ -36,8 +36,10 @@ module Commands
              return
             }
           end
-          rescue
-            event.send_message('Couldn\'t download the required resource')
+          rescue Exception => detail
+            unless detail.is_a? LocalJumpError
+              event.send_message('Couldn\'t download the required resource')
+            end
           end
         end
       end
@@ -61,8 +63,10 @@ module Commands
                 return
               }
             end
-          rescue
-            event.send_message('Can\'t download the required resource')
+          rescue Exception => detail
+            unless detail.is_a? LocalJumpError
+              event.send_message('Can\'t download the required resource')
+            end
           end
         end
 
