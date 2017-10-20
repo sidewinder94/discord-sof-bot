@@ -20,6 +20,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def cantWaitForStatic(container)
         container.command :wwcntw8 do |event|
+          event.channel.delete_message(event.message)
           begin
           open('https://data.zarrouk.eu/sof-discord-resources/images/gifs/cantwait.gif', 'rb') do |read_file|
             Dir.mktmpdir {|dir|
@@ -44,6 +45,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def uploadRemoteFile(container)
         container.command :upload do |event, url, text|
+          event.channel.delete_message(event.message)
           begin
             open(url, 'rb') do |read_file|
               Dir.mktmpdir {|dir|
@@ -70,6 +72,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def manifestTest(container)
         container.command :manifest do |event|
+          event.channel.delete_message(event.message)
           unless event.message.author.id == 168053850664599553
             return
           end
