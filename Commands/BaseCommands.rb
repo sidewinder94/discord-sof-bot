@@ -4,17 +4,23 @@ require 'open-uri'
 module Commands
   class BaseCommands
     class << self
+      # @param [Discordrb::Commands::CommandContainer] container
       def addAllCommands(container)
         unless container.respond_to?(:command)
           raise 'Expected a type possessing commands'
         end
         cantWaitForStatic(container)
+        uploadRemoteFile(container)
+
+
         manifestTest(container)
       end
 
       private
+      # @param [Discordrb::Commands::CommandContainer] container
       def cantWaitForStatic(container)
         container.command :wwcntw8 do |event|
+          begin
           open('https://data.zarrouk.eu/sof-discord-resources/images/gifs/cantwait.gif', 'rb') do |read_file|
             Dir.mktmpdir {|dir|
               filePath = "#{dir}/#{File.basename(read_file.base_uri.path)}"
@@ -29,9 +35,39 @@ module Commands
              return
             }
           end
+          rescue
+            event.send_message('Couldn\'t download the required resource')
+          end
         end
       end
 
+      # @param [Discordrb::Commands::CommandContainer] container
+      def uploadRemoteFile(container)
+        container.command :upload do |event, url, text|
+          begin
+            open(url, 'rb') do |read_file|
+              Dir.mktmpdir {|dir|
+                filePath = "#{dir}/#{File.basename(read_file.base_uri.path)}"
+                File.open(filePath, 'wb') do |save_file|
+                  save_file.write(read_file.read)
+                end
+
+                File.open(filePath, 'rb') do |f|
+                  event.send_file(f, caption: text)
+                end
+                File.delete(filePath)
+                return
+              }
+            end
+          rescue
+            event.send_message('Can\'t download the required resource')
+          end
+        end
+
+      end
+
+
+      # @param [Discordrb::Commands::CommandContainer] container
       def manifestTest(container)
         container.command :manifest do |event|
           unless event.message.author.id == 168053850664599553
@@ -51,9 +87,9 @@ module Commands
               File.delete(filePath)
               return
             }
+            end
           end
         end
       end
     end
   end
-end
