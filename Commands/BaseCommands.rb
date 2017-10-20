@@ -20,11 +20,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def cantWaitForStatic(container)
         container.command :wwcntw8 do |event|
-          begin
-            event.channel.delete_message(event.message)
-          rescue
-            event.send_message('I don\'t have the rights to delete messages in this channel')
-          end
+          deleteMessageSafely(event)
           begin
           open('https://data.zarrouk.eu/sof-discord-resources/images/gifs/cantwait.gif', 'rb') do |read_file|
             Dir.mktmpdir {|dir|
@@ -49,11 +45,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def uploadRemoteFile(container)
         container.command :upload do |event, url, text|
-          begin
-            event.channel.delete_message(event.message)
-          rescue
-            event.send_message('I don\'t have the rights to delete messages in this channel')
-          end
+          deleteMessageSafely(event)
           begin
             open(url, 'rb') do |read_file|
               Dir.mktmpdir {|dir|
@@ -80,11 +72,7 @@ module Commands
       # @param [Discordrb::Commands::CommandContainer] container
       def manifestTest(container)
         container.command :manifest do |event|
-          begin
-            event.channel.delete_message(event.message)
-          rescue
-            event.send_message('I don\'t have the rights to delete messages in this channel')
-          end
+          deleteMessageSafely(event)
           unless event.message.author.id == 168053850664599553
             return
           end
@@ -102,9 +90,22 @@ module Commands
               File.delete(filePath)
               return
             }
-            end
           end
         end
       end
+
+      # @param [Discordrb::Events::MessageEvent] event
+      # @param [bool] displayError
+      def deleteMessageSafely(event, displayError: false)
+        begin
+          event.channel.delete_message(event.message)
+        rescue
+          if displayError
+            event.send_message('I don\'t have the rights to delete messages in this channel')
+          end
+        end
+      end
+
+    end
     end
   end
