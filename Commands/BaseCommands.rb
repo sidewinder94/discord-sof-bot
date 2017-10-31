@@ -46,7 +46,7 @@ module Commands
 
       # @param [Discordrb::Commands::CommandContainer] container
       def uploadRemoteFile(container)
-        container.command :upload do |event, url, text|
+        container.command :upload do |event, url, *text|
           deleteMessageSafely(event)
           begin
             open(url, 'rb') do |read_file|
@@ -57,7 +57,7 @@ module Commands
                 end
 
                 File.open(filePath, 'rb') do |f|
-                  event.send_file(f, caption: text)
+                  event.send_file(f, caption: text.join(' '))
                 end
                 File.delete(filePath)
                 return
