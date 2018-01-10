@@ -1,5 +1,6 @@
 require 'discordrb'
 require 'open-uri'
+require_relative 'Common'
 
 module Commands
   class BaseCommands
@@ -11,8 +12,6 @@ module Commands
         end
         cantWaitForStatic(container)
         uploadRemoteFile(container)
-
-
         manifestTest(container)
       end
 
@@ -109,7 +108,6 @@ module Commands
           end
         end
       end
-
-    end
     end
   end
+end
