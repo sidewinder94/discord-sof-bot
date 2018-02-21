@@ -27,14 +27,16 @@ module Commands
                 die_number = values[0].to_i
                 die_faces = values[1].to_i
 
-                result = 0
-                iterator = 0
-
+                result = (1 + SecureRandom.random_number(die_faces))
+                iterator = 1
+                stringResults = "#{result}"
                 while iterator < die_number
-                  result += (1 + SecureRandom.random_number(die_faces))
+                  rdmResult = (1 + SecureRandom.random_number(die_faces))
+                  result += rdmResult
                   iterator += 1
+                  stringResults = stringResults + " + #{rdmResult}"
                 end
-                event.send_message("Asked : #{toRoll} \nRolled : #{result}")
+                event.send_message("Asked : #{toRoll} \nRolled : #{result}\nRolls : #{stringResults}")
               end
             else
               event.send_message('Invalid parameter')
